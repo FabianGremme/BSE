@@ -1,3 +1,4 @@
+
 /*****************************************************************************
  *                                                                           *
  *                            A L L O C A T O R                              *
@@ -63,8 +64,8 @@ pub fn dump_free_list() {
         ALLOCATOR.lock().dump_free_list();
 }
 
-
-/*pub fn print_status(){
+/*
+pub fn print_status(){
     print!("Start liegt bei {}. ", ALLOCATOR.lock().get_start());
     print!("Next liegt bei {}. ", ALLOCATOR.lock().get_next());
     println!("End liegt bei {}.", ALLOCATOR.lock().get_end());
@@ -99,3 +100,15 @@ fn align_up(addr: usize, align: usize) -> usize {
         addr - remainder + align
     }
 }
+
+
+/*
+
+Muss auskommentiert werden, da wir jetzt 'std' nutzen
+
+// Called by the Rust runtime when an allocation error occurs
+#[alloc_error_handler]
+fn alloc_error_handler(layout: alloc::alloc::Layout) -> ! {
+    panic!("allocation error: {:?}", layout)
+}
+*/

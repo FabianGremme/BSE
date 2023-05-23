@@ -1,4 +1,4 @@
-
+/*
 use crate::devices::cga as cga;  
 use crate::devices::cga_print;       
 use crate::devices::key as key;     
@@ -26,7 +26,7 @@ fn wait_for_return() {
 
 
 fn demo() {
-
+*/
     /* Hier muss Code eingefuegt werden */
      //für bump
     /*// free heap allocated struct before return
@@ -50,7 +50,7 @@ fn demo() {
     wait_for_return();
     cga::clear();*/
     
-
+/*
     
     // nun fuer die Liste:
     allocator::init();
@@ -94,6 +94,7 @@ pub fn run () {
 
     demo();
 
-    /* Hier muss Code eingefuegt werden */
+    // Hier muss Code eingefuegt werden
 
 }
+*/
