@@ -1,13 +1,10 @@
-//use crate::devices::cga;
-
+use crate::devices::cga;
+use crate::kernel::cpu;
 pub fn run() {
-	
-   /* Hier muss Code eingefuegt werden */
-    /*loop {
-        for n in 1..10 {
-            cga::setpos(1, n);
-            cga::print_dec(n);
-        }
-    }*/
-
+    for i in 1..10{
+        cpu::disable_int();
+        cga::setpos(1, i);
+        cga::print_dec(i);
+        cpu::enable_int();
+    }
 }

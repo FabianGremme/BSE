@@ -513,11 +513,10 @@ impl isr::ISR for KeyboardISR {
         
  	   /* Hier muss Code eingefuegt werden */
  	   //hier eine Textausgabe um zu testen, dass trigger aufgerufen wurde
- 	    cga::print_str("trigger", cga::CGA_STD_ATTR);
+ 	    //cga::print_str("trigger", cga::CGA_STD_ATTR);
         KB.lock().key_hit();
         KB.lock().set_lastkey();
         let k = KB.lock().get_lastkey();
-        cga::print_dec(k.into());
-        cga::show(6, 9, k as char, cga::CGA_STD_ATTR);
+        cga::show(8, 8, k as char, cga::CGA_STD_ATTR);
     }
 }

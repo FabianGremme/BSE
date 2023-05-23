@@ -121,10 +121,14 @@ pub extern fn startup() {
     // Tastatur-Unterbrechungsroutine 'einstoepseln'
     /* Hier muss Code eingefuegt werden */
     keyboard::plugin();
+    print!("setup done\n");
 
     // Interrupts an der CPU erlauben 
     /* Hier muss Code eingefuegt werden */
     cpu::enable_int();
-    //keyboard_irq_demo::run();
+    loop{
+        keyboard_irq_demo::run();
+
+    }
 }
 

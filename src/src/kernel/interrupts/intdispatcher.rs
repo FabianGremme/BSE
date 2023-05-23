@@ -43,7 +43,7 @@ pub extern "C" fn int_disp(vector: u32) {
 		cga::print_str("Panic: unexpected interrupt ", cga::CGA_STD_ATTR);
 		cga::print_dec(vector);
 	    cga::print_str(" - processor halted.", cga::CGA_STD_ATTR);
-	    cpu::halt ();
+	    cpu::halt();
 	} 
 }
 
