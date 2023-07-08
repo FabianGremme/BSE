@@ -84,12 +84,12 @@ qemu-gdb:
 	$(VERBOSE) echo "break startup" > /tmp/gdbcommands.$(shell id -u)
 	$(VERBOSE) echo "target remote 127.0.0.1:1234" >> /tmp/gdbcommands.$(shell id -u)
 	$(VERBOSE) echo "continue" >> /tmp/gdbcommands.$(shell id -u)
-	qemu-system-x86_64 -cdrom $(ISO) -soundhw pcspk -s -S 
+	qemu-system-x86_64 -cdrom $(ISO) -soundhw pcspk -s -S &
 
 # --------------------------------------------------------------------------
 # 'gdb' startet den GDB-Debugger und verbindet sich mit dem GDB-Stub des vorher
 # gestarteten Qemu.
-gdb:
+gdb: qemu-gdb
 	gdb -x /tmp/gdbcommands.$(shell id -u) $(SYSTEM)
 	
 help:

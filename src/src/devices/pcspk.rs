@@ -14,6 +14,7 @@
 #![allow(dead_code)]
 
 use crate::kernel::cpu as cpu;
+use crate::devices::pit as pit;
 
 
 // Ports
@@ -139,10 +140,10 @@ fn read_counter() -> u32 {
  *                                                                           *
  * Parameter:       time (delay in ms)                                       *
  *****************************************************************************/
-fn delay (time: u32) {
+pub fn delay (time: u32) {
 
    /* Hier muss Code eingefuegt werden */
-    let mut amount = time * 1000000 /838;
+    /*let mut amount = time * 1000000 /838;
     let rest = amount % 65535;
 
     //ein Mal runterzaehlen dauert 838 ns
@@ -155,9 +156,14 @@ fn delay (time: u32) {
     let mut zielcounter = currentcounter;
     while currentcounter - rest < zielcounter{
         zielcounter = read_counter();
+    } */
+
+    let mut current_systime = pit::get_systime();
+    // ein Tick sind 10 ms, somit ist das System etwas ungenau, aber an die vorgegebene Tickgröße angepasst
+    let target_time = current_systime + (time as u64)/10;
+    while current_systime < target_time{
+        current_systime = pit::get_systime();
     }
-
-
    
 }
 

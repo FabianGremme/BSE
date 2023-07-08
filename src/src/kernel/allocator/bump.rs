@@ -58,15 +58,20 @@ impl BumpAllocator {
 	}
 
    pub unsafe fn alloc(&mut self, layout: Layout) -> *mut u8 {
+       let ptr = self.next as u64;
+       let mut alignment = 0;
+       if ptr % 8 != 0{
+           alignment = ptr % 8;
+       }
 
        /* Hier muss Code eingefuegt werden */
-       self.next = self.next + layout.size();
-       return self.next as *mut u8;
+       self.next = self.next + layout.size() + alignment as usize;
+       return (ptr + alignment) as *mut u8;
 
    }
    
    pub unsafe fn dealloc(&mut self, ptr: *mut u8, layout: Layout) {
-      println!("   dealloc: size={}, align={}; not supported", layout.size(), layout.align());
+      //println!("   dealloc: size={}, align={}; not supported", layout.size(), layout.align());
    }
 
     pub fn get_start(&mut self) -> usize{

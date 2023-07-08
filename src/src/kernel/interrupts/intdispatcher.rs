@@ -51,10 +51,10 @@ pub extern "C" fn int_disp(vector: u32) {
 
 const MAX_VEC_NUM: usize = 256;
 
-static INT_VECTORS: Mutex<IntVectors> = Mutex::new( IntVectors{ map: Vec::new(), } );
+pub static INT_VECTORS: Mutex<IntVectors> = Mutex::new( IntVectors{ map: Vec::new(), } );
 
 // Interrupt vector map
-struct IntVectors {
+pub struct IntVectors {
     map: Vec<Box<dyn isr::ISR>>,
 }
 

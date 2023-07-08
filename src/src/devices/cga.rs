@@ -196,7 +196,6 @@ pub fn print_byte (b: u8) {
             }else{
                 scrollup();
             }
-
         }
     }
 

@@ -11,7 +11,7 @@
 
 use spin::Mutex;
 
-
+use alloc::boxed::Box;
 use crate::kernel::cpu as cpu;
 use crate::devices::key as key;  // shortcut for key
 use crate::devices::cga as cga;

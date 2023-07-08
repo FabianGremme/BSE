@@ -14,6 +14,7 @@
 use super::{align_up, Locked};
 use alloc::alloc::{GlobalAlloc, Layout};
 use core::{mem, ptr};
+use crate::kernel::cpu as cpu;
 
 
 // metadata for each free memory block
@@ -73,20 +74,20 @@ impl LinkedListAllocator {
     // the given heap bounds are valid and that the heap is unused.
     // This method must be called only once.
     pub unsafe fn init(&mut self, heap_start: usize, heap_size: usize) {
-
+        cpu::disable_int();
        /* Hier muss Code eingefuegt werden */
         self.head.size = heap_size;
         self.heap_start = heap_start;
         self.heap_end = heap_start + heap_size;
         
         self.add_free_block(heap_start, heap_size);
+        cpu::enable_int();
 
     }
 
 
     // Adds the given free memory block 'addr' to the front of the free list.
     unsafe fn add_free_block(&mut self, addr: usize, size: usize) {
-		
        /* Hier muss Code eingefuegt werden */
         assert_eq!(align_up(addr, mem::align_of::<ListNode>()), addr);
         assert!(size >= mem::size_of::<ListNode>());
@@ -108,9 +109,8 @@ impl LinkedListAllocator {
     fn find_free_block(&mut self, size: usize, align: usize)
         -> Option<&'static mut ListNode>
     {
-
        /* Hier muss Code eingefuegt werden */
-        {
+
             // reference to current list node, updated for each iteration
             let mut current = &mut self.head;
             while let Some(ref mut block) = current.next {
@@ -125,9 +125,9 @@ impl LinkedListAllocator {
                     current = current.next.as_mut().unwrap();
                 }
             }
+        None
 
-            None
-        }
+
 
     }
     
@@ -139,7 +139,7 @@ impl LinkedListAllocator {
     fn check_block_for_alloc(block: &ListNode, size: usize, align: usize)
         -> Result<usize, ()>
     {
-
+        // ist schon von interrupts befreit
        /* Hier muss Code eingefuegt werden */
         let alloc_start = align_up(block.start_addr(), align);
         let alloc_end = alloc_start.checked_add(size).ok_or(())?;
@@ -189,10 +189,10 @@ impl LinkedListAllocator {
     
     pub unsafe fn alloc(&mut self, layout: Layout) -> *mut u8 {
        // print!("   alloc: size={}, align={}", layout.size(), layout.align());
-
+        cpu::disable_int();
        // perform layout adjustments
        let (size, align) = LinkedListAllocator::size_align(layout);
-       let ret_ptr: *mut u8; 
+       let ret_ptr: *mut u8;
 
        if let Some(block) = self.find_free_block(size, align) {
            let alloc_end = block.start_addr().checked_add(size).expect("overflow");
@@ -210,16 +210,17 @@ impl LinkedListAllocator {
            // println!(", *** out of memory ***");
            ret_ptr = ptr::null_mut(); // out of memory
        }
+        cpu::enable_int();
        ret_ptr
    }
     
    pub unsafe fn dealloc(&mut self, ptr: *mut u8, layout: Layout) {
    // println!("   dealloc: size={}, align={}; not supported", layout.size(), layout.align());
-
+       cpu::disable_int();
       let (size, _) = LinkedListAllocator::size_align(layout);
-      self.add_free_block(ptr as usize, size)
+      self.add_free_block(ptr as usize, size);
+       cpu::enable_int();
    }
-
 }
 
 // Trait required by the Rust runtime for heap allocations
@@ -232,5 +233,4 @@ unsafe impl GlobalAlloc for Locked<LinkedListAllocator> {
     unsafe fn dealloc(&self, ptr: *mut u8, layout: Layout) {
         self.lock().dealloc(ptr, layout);
     }
-    
 }
